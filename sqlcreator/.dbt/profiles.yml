@@ -1,0 +1,11 @@
+sql_dataware_house_project:
+  target: dev
+  outputs:
+    dev:
+      type: sqlserver
+      driver: "ODBC Driver 17 for SQL Server"
+      server: "Marina"
+      database: "DataWarehouse"
+      schema: "dbo"
+      windows_login: True
+      trust_cert: true

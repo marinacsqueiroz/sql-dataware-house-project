@@ -1,0 +1,18 @@
+name: sql_dataware_house_project
+version: 1.0.0
+profile: sql_dataware_house_project
+config-version: 2
+
+models:
+  sql_dataware_house_project:
+    bronze:
+      +schema: bronze
+      +materialized: table
+
+    silver:
+      +schema: silver
+      +materialized: table
+
+    gold:
+      +schema: gold
+      +materialized: table
