@@ -65,6 +65,6 @@ Once your connection settings are configured, run the following command to creat
 ```
 dbt run-operation create_schema_if_not_exists `
   --args '{ "schema_name": "bronze" }' `
-  --profiles-dir ./.dbt `
-  --project-dir .
+  --profiles-dir ./sqlcreator/.dbt `
+  --project-dir ./sqlcreator
 ```
