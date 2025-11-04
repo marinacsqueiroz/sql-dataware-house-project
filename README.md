@@ -20,6 +20,24 @@ This guide explains how to set up your SQL Server database, configure dbt, and c
 
 ---
 
+## 🧰 Installation
+
+Before running the dbt project, make sure you have **Python 3.8+** installed and your virtual environment activated (recommended).
+
+Then install dbt with SQL Server support using the following command:
+
+```bash
+python -m pip install dbt-core dbt-sqlserver
+```
+
+This will install:
+
+- dbt-core → the main dbt framework
+- dbt-sqlserver → the adapter that allows dbt to connect to Microsoft SQL Server
+
+💡 Tip:
+If you are using a virtual environment (like .venv), make sure it’s activated before running the installation command:
+
 ## 🧱 Step 1 — Create the Database in SQL Server
 
 Open **SQL Server Management Studio (SSMS)** and run the following command:
