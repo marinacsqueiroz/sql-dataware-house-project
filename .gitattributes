@@ -1,0 +1,11 @@
+# Ignore só artefatos do dbt (não o projeto inteiro)
+**/target/**                 linguist-vendored
+**/logs/**                   linguist-generated
+**/dbt_packages/**           linguist-vendored
+**/dbt_internal_packages/**  linguist-vendored
+
+# Conte SQL e YAML como linguagens detectáveis
+**/**/*.sql   linguist-language=SQL   linguist-detectable=true
+**/**/*.yml   linguist-language=YAML  linguist-detectable=true
+**/**/*.yaml  linguist-language=YAML  linguist-detectable=true
+**/**/*.py  linguist-language=PYTHON  linguist-detectable=true
