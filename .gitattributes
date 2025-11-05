@@ -1,11 +1,32 @@
-# Ignore só artefatos do dbt (não o projeto inteiro)
-**/target/**                 linguist-vendored
-**/logs/**                   linguist-generated
-**/dbt_packages/**           linguist-vendored
-**/dbt_internal_packages/**  linguist-vendored
+# ===========================
+# 🧠 SQL-DATAWARE-HOUSE-PROJECT
+# Linguist configuration for GitHub
+# ===========================
 
-# Conte SQL e YAML como linguagens detectáveis
-**/**/*.sql   linguist-language=SQL   linguist-detectable=true
-**/**/*.yml   linguist-language=YAML  linguist-detectable=true
-**/**/*.yaml  linguist-language=YAML  linguist-detectable=true
-**/**/*.py  linguist-language=PYTHON  linguist-detectable=true
+# --- Ignore build & generated artifacts ---
+**/target/**                  linguist-vendored
+**/logs/**                    linguist-generated
+**/profile_report/**          linguist-generated
+**/profile_report/analysis_html/**  linguist-generated
+**/dbt_packages/**            linguist-vendored
+**/dbt_internal_packages/**   linguist-vendored
+**/.venv/**                   linguist-vendored
+
+# --- Ignore temporary and system folders ---
+**/__pycache__/**             linguist-generated
+**/.ipynb_checkpoints/**      linguist-generated
+
+# --- Detect and classify key source languages ---
+# dbt SQL models and macros
+**/*.sql                      linguist-language=SQL      linguist-detectable=true
+# YAML configuration (dbt and project settings)
+**/*.yml                      linguist-language=YAML     linguist-detectable=true
+**/*.yaml                     linguist-language=YAML     linguist-detectable=true
+# Python scripts (profiling, automation)
+**/*.py                       linguist-language=Python   linguist-detectable=true
+# JSON configuration files
+**/*.json                     linguist-language=JSON     linguist-detectable=true
+
+# --- Documentation and tests ---
+**/docs/**                    linguist-documentation
+**/tests/**                   linguist-detectable=true
