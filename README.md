@@ -31,10 +31,11 @@ The column type mapping logic in the system is executed as follows:
 
 ```python
 column_type = {
-    "id": "INT",          # Columns containing 'id' will be treated as INT.
-    "date": "DATE",       # Columns containing 'date' will be treated as DATE.
-    "object": "NVARCHAR(50)", # Default for text columns.
-    "int64": "INT"        # Default for INT64 columns without 'id' in the name.
+    "id": "INT",
+    "date": "DATE",
+    "object": "NVARCHAR(50)",
+    "int64": "INT",
+    "float64": "FLOAT"
 }
 ```
 
@@ -44,7 +45,7 @@ column_type = {
     * *Example: Use `collaborator_id` instead of `collaborator`.*
 * **Date Columns:** Columns containing date values **must** contain the substring **`date`** in their name.
     * *Example: Use `travel_date` instead of `travel_day`.*
-    
+
 # 🚀 Getting Started with the dbt + SQL Server Project
 
 This guide explains how to set up your SQL Server database, configure dbt, and create your initial schema (`bronze`) to start running your models.
