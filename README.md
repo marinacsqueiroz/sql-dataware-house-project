@@ -63,8 +63,8 @@ Make sure the top-level key (sql_dataware_house_project) matches the value of th
 Once your connection settings are configured, run the following command to create the bronze schema in your database:
 
 ```
-dbt run-operation create_schema_if_not_exists `
-  --args '{ "schema_name": "bronze" }' `
+dbt run-operation create_multiple_schemas `
+  --args '{"schema_list": ["bronze", "silver", "gold"]}' `
   --profiles-dir ./sqlcreator/.dbt `
   --project-dir ./sqlcreator
 ```
