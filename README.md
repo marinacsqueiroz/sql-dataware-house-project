@@ -25,7 +25,7 @@ The system uses **substrings within the column names** to automatically infer th
 | **`INT`** (Identifier) | **`id`** | `collaborator_id`, `vehicle_id`, `route_id` |
 | **`DATE`** (Date) | **`date`** | `boarding_date`, `scheduled_date`, `end_date` |
 
-### 🔍 Detailed Mapping Logic
+### 🔍 Detailed Mapping Logic 
 
 The column type mapping logic in the system is executed as follows:
 
@@ -37,6 +37,12 @@ column_type = {
     "int64": "INT",
     "float64": "FLOAT"
 }
+```
+
+You can dit the file located at:
+
+```
+scripts/config/column_type_config.json
 ```
 
 ### 💡 Essential Requirements:
