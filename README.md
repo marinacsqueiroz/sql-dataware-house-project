@@ -14,6 +14,37 @@ I implemented the **Medallion Architecture** (Bronze, Silver, and Gold layers) t
 * **Silver Layer (Cleaned):** The **Data Quality** layer. Data is cleansed, standardized, and normalized, preparing it for deeper analysis.
 * **Gold Layer (BI-Ready):** The consumption layer. Data is modeled into an optimized **Star Schema** for direct use by BI tools and complex analytical queries.
 
+## 📄 CSV DataFrame Naming Convention Standard
+
+To ensure correct data processing and proper type mapping during the import process (as defined by the `column_type` below), your CSV files **must adhere to a specific naming standard** for key columns.
+
+The system uses **substrings within the column names** to automatically infer the data type.
+
+| Desired Data Type | Mandatory Substring in Column Name | Valid Column Name Examples |
+| :---------------: | :--------------------------------: | :------------------------: |
+| **`INT`** (Identifier) | **`id`** | `collaborator_id`, `vehicle_id`, `route_id` |
+| **`DATE`** (Date) | **`date`** | `boarding_date`, `scheduled_date`, `end_date` |
+
+### 🔍 Detailed Mapping Logic
+
+The column type mapping logic in the system is executed as follows:
+
+```python
+column_type = {
+    "id": "INT",          # Columns containing 'id' will be treated as INT.
+    "date": "DATE",       # Columns containing 'date' will be treated as DATE.
+    "object": "NVARCHAR(50)", # Default for text columns.
+    "int64": "INT"        # Default for INT64 columns without 'id' in the name.
+}
+```
+
+### 💡 Essential Requirements:
+
+* **Identification Columns:** Columns representing keys or IDs **must** contain the substring **`id`** in their name.
+    * *Example: Use `collaborator_id` instead of `collaborator`.*
+* **Date Columns:** Columns containing date values **must** contain the substring **`date`** in their name.
+    * *Example: Use `travel_date` instead of `travel_day`.*
+    
 # 🚀 Getting Started with the dbt + SQL Server Project
 
 This guide explains how to set up your SQL Server database, configure dbt, and create your initial schema (`bronze`) to start running your models.
