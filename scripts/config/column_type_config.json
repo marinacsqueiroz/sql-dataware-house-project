@@ -1,0 +1,7 @@
+{
+    "id": "INT",
+    "date": "DATE",
+    "object": "NVARCHAR(50)",
+    "int64": "INT",
+    "float64": "FLOAT"
+}
