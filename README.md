@@ -22,7 +22,7 @@ The system uses **substrings within the column names** to automatically infer th
 
 | Desired Data Type | Mandatory Substring in Column Name | Valid Column Name Examples |
 | :---------------: | :--------------------------------: | :------------------------: |
-| **`INT`** (Identifier) | **`id`** | `collaborator_id`, `vehicle_id`, `route_id` |
+| **`INT`** (Identifier) | **`_id`** | `collaborator_id`, `vehicle_id`, `route_id` |
 | **`DATE`** (Date) | **`date`** | `boarding_date`, `scheduled_date`, `end_date` |
 
 ### 🔍 Detailed Mapping Logic 
@@ -31,7 +31,7 @@ The column type mapping logic in the system is executed as follows:
 
 ```python
 column_type = {
-    "id": "INT",
+    "_id": "INT",
     "date": "DATE",
     "object": "NVARCHAR(50)",
     "int64": "INT",
