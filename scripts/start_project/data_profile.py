@@ -31,48 +31,45 @@
 #   integration with dbt or SQL schema generation workflows.
 # -----------------------------------------------------------------------------
 
-
 import json
 import pandas as pd
 import os
 from ydata_profiling import ProfileReport
 
-base_path = "datasets"
+def analyse_dataset(base_path: str, file_path_config: str):
+    
+    dataframes = {}
 
-dataframes = {}
+    with open(file_path_config, "r", encoding="utf-8") as f:
+        column_type = json.load(f)
 
-file_path_config = os.path.join("scripts", "config", "column_type_config.json")
+    for root, _, files in os.walk(base_path):
+        for file in files:
+            if file.lower().endswith(".csv"):
+                file_path = os.path.join(root, file)
+                relative_path = os.path.relpath(file_path, base_path)
+                df_name = (relative_path.replace("\\", "/").replace("/", "_").replace(".csv", "")).lower()
+                
+                df = pd.read_csv(file_path)
 
-with open(file_path_config, "r", encoding="utf-8") as f:
-    column_type = json.load(f)
+                df_dtypes = {col.lower(): dtype for col, dtype in df.dtypes.to_dict().items()}
 
-for root, dirs, files in os.walk(base_path):
-    for file in files:
-        if file.lower().endswith(".csv"):
-            file_path = os.path.join(root, file)
-            relative_path = os.path.relpath(file_path, base_path)
-            df_name = (relative_path.replace("\\", "/").replace("/", "_").replace(".csv", "")).lower()
-            
-            df = pd.read_csv(file_path)
+                for col, new_type in column_type.items():
+                    for column in df_dtypes.keys():
+                        if col in column:
+                            df_dtypes[column] = new_type
+                        elif col in str(df_dtypes[column]):
+                            df_dtypes[column] = new_type
 
-            df_dtypes = {col.lower(): dtype for col, dtype in df.dtypes.to_dict().items()}
+                dataframes[df_name] = df_dtypes      
 
-            for col, new_type in column_type.items():
-                for column in df_dtypes.keys():
-                    if col in column:
-                        df_dtypes[column] = new_type
-                    elif col in str(df_dtypes[column]):
-                        df_dtypes[column] = new_type
+                profile = ProfileReport(df, title="Profiling Report")
+                profile.to_file(f"./profile_report/analysis_html/{df_name}.html")
 
-            dataframes[df_name] = df_dtypes      
+    output_path = os.path.join("scripts", "config", "bronze" ,"column_types.json")
+    os.makedirs(os.path.dirname(output_path), exist_ok=True)
 
-            profile = ProfileReport(df, title="Profiling Report")
-            profile.to_file(f"./profile_report/analysis_html/{df_name}.html")
+    with open(output_path, "w", encoding="utf-8") as f:
+        json.dump(dataframes, f, indent=4, ensure_ascii=False)
 
-output_path = os.path.join("sqlcreator", "macros", "config", "column_types.json")
-os.makedirs(os.path.dirname(output_path), exist_ok=True)
-
-with open(output_path, "w", encoding="utf-8") as f:
-    json.dump(dataframes, f, indent=4, ensure_ascii=False)
-
-        
+    return
