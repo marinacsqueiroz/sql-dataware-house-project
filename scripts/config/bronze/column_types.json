@@ -29,16 +29,16 @@
         "sls_price": "FLOAT"
     },
     "erp_cust_az12": {
-        "cid": "INT",
+        "cid": "NVARCHAR(50)",
         "bdate": "DATE",
         "gen": "NVARCHAR(50)"
     },
     "erp_loc_a101": {
-        "cid": "INT",
+        "cid": "NVARCHAR(50)",
         "cntry": "NVARCHAR(50)"
     },
     "erp_px_cat_g1v2": {
-        "id": "INT",
+        "id": "NVARCHAR(50)",
         "cat": "NVARCHAR(50)",
         "subcat": "NVARCHAR(50)",
         "maintenance": "NVARCHAR(50)"
