@@ -2,6 +2,7 @@
   {% set path = file_path | replace('\\', '\\\\') %}
 
   {% set sql %}
+    TRUNCATE TABLE {{ table_path }}
     BULK INSERT {{ table_path }}
     FROM '{{ path }}'
     WITH ( 
