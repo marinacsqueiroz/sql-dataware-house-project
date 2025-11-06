@@ -96,13 +96,22 @@ Update the server and port fields according to your SQL Server host and connecti
 💡 Important:
 Make sure the top-level key (sql_dataware_house_project) matches the value of the profile: field in your dbt_project.yml.
 
-## 🧩 Step 3 — Create the bronze Schema Using dbt
+## 🧩 Step 3 — Initialize Your Project and Create the Schemas/Tables
 
-Once your connection settings are configured, run the following command to create the bronze schema in your database:
+Once your connection settings are configured, you can initialize the database structure (schemas and tables) automatically by running the Python setup script.
 
+### ✅ Run the Python script
+From the root of your project directory, execute:
+
+```bash
+python scripts/start_project/main.py
 ```
-dbt run-operation create_multiple_schemas `
-  --args '{"schema_list": ["bronze", "silver", "gold"]}' `
-  --profiles-dir ./sqlcreator/.dbt `
-  --project-dir ./sqlcreator
-```
+
+🔍 What this step does
+
+The script:
+
+- Reads your configuration files from scripts/config/ (such as schema.json and column_types.json);
+- Runs dbt run-operation commands under the hood to:
+    - Create the schemas (bronze, silver, gold);
+    - Create the corresponding tables in each schema, using column definitions from your JSON files;
