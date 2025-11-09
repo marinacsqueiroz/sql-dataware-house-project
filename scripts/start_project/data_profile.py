@@ -34,42 +34,64 @@
 import json
 import pandas as pd
 import os
+from logging import Logger
 from ydata_profiling import ProfileReport
 
-def analyse_dataset(base_path: str, file_path_config: str):
+def analyse_dataset(base_path: str, file_path_config: str, logger: Logger, output_path: str) -> bool:
     
     dataframes = {}
 
-    with open(file_path_config, "r", encoding="utf-8") as f:
-        column_type = json.load(f)
+    logger.info(f"Loading custom column type configuration from: {file_path_config}")
+    try:
+        try:
+            with open(file_path_config, "r", encoding="utf-8") as f:
+                column_type = json.load(f)
+        except (FileNotFoundError, json.JSONDecodeError) as e:
+            logger.error(f"FATAL: Failed to load or decode custom configuration file {file_path_config}: {e}", exc_info=True)
+            return False
 
-    for root, _, files in os.walk(base_path):
-        for file in files:
-            if file.lower().endswith(".csv"):
-                file_path = os.path.join(root, file)
-                relative_path = os.path.relpath(file_path, base_path)
-                df_name = (relative_path.replace("\\", "/").replace("/", "_").replace(".csv", "")).lower()
-                
-                df = pd.read_csv(file_path)
+        logger.info(f"Starting recursive scan and analysis in directory: {base_path}")
 
-                df_dtypes = {col.lower(): dtype for col, dtype in df.dtypes.to_dict().items()}
+        for root, _, files in os.walk(base_path):
+            for file in files:
+                if file.lower().endswith(".csv"):
+                    file_path = os.path.join(root, file)
+                    relative_path = os.path.relpath(file_path, base_path)
+                    df_name = (relative_path.replace("\\", "/").replace("/", "_").replace(".csv", "")).lower()
+                    
+                    logger.info(f"Processing dataset: {df_name} from {file_path}")
 
-                for col, new_type in column_type.items():
-                    for column in df_dtypes.keys():
-                        if col in column:
-                            df_dtypes[column] = new_type
-                        elif col in str(df_dtypes[column]):
-                            df_dtypes[column] = new_type
+                    df = pd.read_csv(file_path)
 
-                dataframes[df_name] = df_dtypes      
+                    df_dtypes = {col.lower(): dtype for col, dtype in df.dtypes.to_dict().items()}
 
-                profile = ProfileReport(df, title="Profiling Report")
-                profile.to_file(f"./profile_report/analysis_html/{df_name}.html")
+                    for col, new_type in column_type.items():
+                        for column in df_dtypes.keys():
+                            if col in column:
+                                logger.debug(f"Mapped column '{column}' based on name match '{col}' to type '{new_type}'.")
+                                df_dtypes[column] = new_type
+                            elif col in str(df_dtypes[column]):
+                                logger.debug(f"Mapped column '{column}' based on dtype match '{col}' to type '{new_type}'.")
+                                df_dtypes[column] = new_type
 
-    output_path = os.path.join("scripts", "config", "bronze" ,"column_types.json")
-    os.makedirs(os.path.dirname(output_path), exist_ok=True)
+                    dataframes[df_name] = df_dtypes      
 
-    with open(output_path, "w", encoding="utf-8") as f:
-        json.dump(dataframes, f, indent=4, ensure_ascii=False)
+                    # profile = ProfileReport(df, title="Profiling Report")
+                    # report_path = (f"./profile_report/analysis_html/{df_name}.html")
+                    # profile.to_file(report_path)
+                    # logger.debug(f"Profiling report generated at: {report_path}")
+        
+        try:
+            os.makedirs(os.path.dirname(output_path), exist_ok=True)
 
-    return
+            with open(output_path, "w", encoding="utf-8") as f:
+                json.dump(dataframes, f, indent=4, ensure_ascii=False)
+            logger.info(f"SUCCESS: Final column type configuration saved to: {output_path}")
+            return True
+        except Exception as e:
+            logger.error(f"FATAL: Failed to write final configuration file to {output_path}: {e}", exc_info=True)
+            return False
+        
+    except Exception as e:
+        logger.error(f"An unexpected error occurred during dataset scanning/profiling: {e}", exc_info=True)
+        return False
