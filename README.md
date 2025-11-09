@@ -107,31 +107,20 @@ From the root of your project directory, execute:
 python scripts/start_project/main.py
 ```
 
-Com certeza! Aqui está a descrição do script atualizada em formato Markdown, ideal para copiar e usar em documentação:
-
-Markdown
-
-### ✅ Run the Python script
-From the root of your project directory, execute:
-
-```bash
-python scripts/start_project/main.py
-```
-
 🔍 What this step does
 The script orchestrates the entire project initialization and analysis workflow by performing the following sequential steps:
 
 #### Schema and Model Initialization:
-    - Reads the initial schema configuration (scripts/config/schema.json).
-    - Runs dbt run-operation commands to create the foundational database schemas (e.g., bronze, silver, gold) and their corresponding empty model folders within the project structure.
+- Reads the initial schema configuration (scripts/config/schema.json).
+- Runs dbt run-operation commands to create the foundational database schemas (e.g., bronze, silver, gold) and their corresponding empty model folders within the project structure.
 #### Data Analysis and Type Mapping (Profiling):
-    - Recursively scans all CSV files in the datasets/ directory.
-    - Generates an HTML profiling report for each dataset (e.g., using ydata-profiling).
-    - Infers and maps data types, combining Pandas' detected dtypes with custom standardization rules defined in your configuration.
+- Recursively scans all CSV files in the datasets/ directory.
+- Generates an HTML profiling report for each dataset (e.g., using ydata-profiling).
+- Infers and maps data types, combining Pandas' detected dtypes with custom standardization rules defined in your configuration.
 #### Configuration Output:
-    - Exports the consolidated, standardized column definitions for all datasets to the main configuration file (scripts/config/bronze/column_types.json). This file is used in the next step.
+- Exports the consolidated, standardized column definitions for all datasets to the main configuration file (scripts/config/bronze/column_types.json). This file is used in the next step.
 #### Table Creation and Data Loading (DDL/DML):
-    - Iterates through the standardized column definitions (column_types.json).
-    - For each dataset, runs dbt run-operation commands to:
-    - Create the physical table (DDL) in the database (e.g., under the bronze schema) with the correct column types.
-    - Load data (DML) from the corresponding raw CSV file into the newly created table.
+- Iterates through the standardized column definitions (column_types.json).
+- For each dataset, runs dbt run-operation commands to:
+- Create the physical table (DDL) in the database (e.g., under the bronze schema) with the correct column types.
+- Load data (DML) from the corresponding raw CSV file into the newly created table.
