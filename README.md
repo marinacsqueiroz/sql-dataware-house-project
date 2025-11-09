@@ -107,8 +107,7 @@ From the root of your project directory, execute:
 python scripts/start_project/main.py
 ```
 
-🔍 What this step does
-The script orchestrates the entire project initialization and analysis workflow by performing the following sequential steps:
+🔍 What this script does:
 
 #### Schema and Model Initialization:
 - Reads the initial schema configuration (scripts/config/schema.json).
