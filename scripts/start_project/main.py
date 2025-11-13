@@ -37,7 +37,7 @@ log_manager = LogManager(subdirectory='start_project')
 logger = log_manager.get_logger()
 
 logger.info("--- STARTING MAIN PROJECT CREATION AND ANALYSIS PROCESS ---")
-start_time_all_process = time.time()
+bach_start_time = time.time()
 logger.info(f"Starting creation of schemas and models from: {initial_project_file_path}")
 try:
     start_time = time.time()
@@ -76,7 +76,7 @@ try:
 except Exception as e:
     logger.error(f"CRITICAL ERROR during table creation: {e}", exc_info=True)
 
-end_time_all_process = time.time()
-duration_all_process = end_time_all_process-start_time_all_process
-logger.info(f"--- MAIN PROCESS CONCLUDED IN {duration_all_process:.4f} SECONDS---")
+bach_end_time = time.time()
+bach_duration = bach_end_time-bach_start_time
+logger.info(f"--- MAIN PROCESS CONCLUDED IN {bach_duration:.4f} SECONDS---")
 log_manager.flush_and_close()
