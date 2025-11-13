@@ -13,9 +13,12 @@ import subprocess
 from pathlib import Path
 from logging import Logger
 
-def create_table(file_path_data_config: str, file_path_datasets: str, logger: Logger, add_info: bool = True) -> bool:
+import yaml
+
+def create_table(file_path_data_config: str, file_path_datasets: str, logger: Logger, add_info: bool = False) -> bool:
     
     logger.info(f"Starting table creation and data loading using config: {file_path_data_config}")
+    tables = []
     try:
         try:
             with open(file_path_data_config, "r", encoding="utf-8") as f:
@@ -54,6 +57,38 @@ def create_table(file_path_data_config: str, file_path_datasets: str, logger: Lo
             
             logger.info(f"SUCCESS: Table {table_name} created successfully.")
 
+            
+            dbt_stg_path = os.path.join("sqlcreator", "models", "staging", "bronze")
+            sql_file_path = Path(dbt_stg_path) / Path(f"stg_{table_name}.sql")
+
+            sql_content = (
+                f"SELECT\n"
+                f"    *\n"
+                f"FROM {{{{ source('bronze', '{table_name}') }}}}\n"
+            )
+
+            
+            with open(sql_file_path, "w", encoding="utf-8") as f:
+                f.write(sql_content)
+
+            logger.info(f"STG model created: {sql_file_path}")
+
+            table_entry = {
+                "name": table_name,
+                "description": f"Tabela origem bronze.{table_name}",
+                "columns": []
+            }
+
+            for col_name in item.keys():
+                col_entry = {
+                    "name": col_name,
+                    "description": ""
+                }
+
+                table_entry["columns"].append(col_entry)
+
+            tables.append(table_entry)
+
             if add_info:
                 try:
                     folder, csv_file = table_name.split("_", 1)
@@ -88,7 +123,31 @@ def create_table(file_path_data_config: str, file_path_datasets: str, logger: Lo
                     logger.error(f"STDERR: {insert_result.stderr.strip()}")
                 else:
                     logger.info(f"SUCCESS: Data loaded into {table_name}.")
-                    
+
+        sources_yml = {
+            "sources": [
+                {
+                    "name": "bronze",
+                    "database": "DataWarehouse",
+                    "schema": "bronze",
+                    "tables": tables
+                }
+            ]
+        }
+
+
+        yml_path = Path(dbt_stg_path) / f"_src_bronze.yml"
+
+        with open(yml_path, "w", encoding="utf-8") as f:
+            yaml.safe_dump(
+                sources_yml,
+                f,
+                sort_keys=False,
+                allow_unicode=True
+            )
+
+        logger.info(f"YAML file created: {yml_path}")      
+
     except Exception as e:
         logger.error(f"An unexpected error occurred during table processing: {e}", exc_info=True)
         return False

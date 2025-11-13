@@ -34,7 +34,7 @@ def create_schema_and_models(file_path_config: str, logger: Logger) -> bool:
         logger.info("DBT operation 'create_multiple_schemas' completed successfully.")
         logger.debug(f"DBT Output: {result.stdout.strip()}")
 
-        dbt_models_path = os.path.join("sqlcreator", "models")
+        dbt_models_path = os.path.join("sqlcreator", "models", "staging")
         
         for schema in schema_list["schema_list"]:
             folder_path = Path(dbt_models_path) / schema

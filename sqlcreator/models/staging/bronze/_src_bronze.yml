@@ -1,0 +1,87 @@
+sources:
+- name: bronze
+  database: DataWarehouse
+  schema: bronze
+  tables:
+  - name: crm_cust_info
+    description: Tabela origem bronze.crm_cust_info
+    columns:
+    - name: cst_id
+      description: ''
+    - name: cst_key
+      description: ''
+    - name: cst_firstname
+      description: ''
+    - name: cst_lastname
+      description: ''
+    - name: cst_marital_status
+      description: ''
+    - name: cst_gndr
+      description: ''
+    - name: cst_create_date
+      description: ''
+  - name: crm_prd_info
+    description: Tabela origem bronze.crm_prd_info
+    columns:
+    - name: prd_id
+      description: ''
+    - name: prd_key
+      description: ''
+    - name: prd_nm
+      description: ''
+    - name: prd_cost
+      description: ''
+    - name: prd_line
+      description: ''
+    - name: prd_start_date
+      description: ''
+    - name: prd_end_date
+      description: ''
+  - name: crm_sales_details
+    description: Tabela origem bronze.crm_sales_details
+    columns:
+    - name: sls_ord_num
+      description: ''
+    - name: sls_prd_key
+      description: ''
+    - name: sls_cust_id
+      description: ''
+    - name: sls_order_dt
+      description: ''
+    - name: sls_ship_dt
+      description: ''
+    - name: sls_due_dt
+      description: ''
+    - name: sls_sales
+      description: ''
+    - name: sls_quantity
+      description: ''
+    - name: sls_price
+      description: ''
+  - name: erp_cust_az12
+    description: Tabela origem bronze.erp_cust_az12
+    columns:
+    - name: cid
+      description: ''
+    - name: bdate
+      description: ''
+    - name: gen
+      description: ''
+  - name: erp_loc_a101
+    description: Tabela origem bronze.erp_loc_a101
+    columns:
+    - name: cid
+      description: ''
+    - name: cntry
+      description: ''
+  - name: erp_px_cat_g1v2
+    description: Tabela origem bronze.erp_px_cat_g1v2
+    columns:
+    - name: id
+      description: ''
+    - name: cat
+      description: ''
+    - name: subcat
+      description: ''
+    - name: maintenance
+      description: ''
