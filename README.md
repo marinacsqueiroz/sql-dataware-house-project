@@ -110,14 +110,14 @@ python scripts/start_project/main.py
 🔍 What this script does:
 
 #### Schema and Model Initialization:
-- Reads the initial schema configuration (scripts/config/schema.json).
+- Reads the initial schema configuration (scripts/start_dbt_project/config/schema.json).
 - Runs dbt run-operation commands to create the foundational database schemas (e.g., bronze, silver, gold) and their corresponding empty model folders within the project structure.
 #### Data Analysis and Type Mapping (Profiling):
 - Recursively scans all CSV files in the datasets/ directory.
 - Generates an HTML profiling report for each dataset (e.g., using ydata-profiling).
 - Infers and maps data types, combining Pandas' detected dtypes with custom standardization rules defined in your configuration.
 #### Configuration Output:
-- Exports the consolidated, standardized column definitions for all datasets to the main configuration file (scripts/config/bronze/column_types.json). This file is used in the next step.
+- Exports the consolidated, standardized column definitions for all datasets to the main configuration file (scripts/start_dbt_project/config/bronze/column_types.json). This file is used in the next step.
 #### Table Creation and Data Loading (DDL/DML):
 - Iterates through the standardized column definitions (column_types.json).
 - For each dataset, runs dbt run-operation commands to:
