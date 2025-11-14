@@ -123,3 +123,5 @@ python scripts/start_project/main.py
 - For each dataset, runs dbt run-operation commands to:
 - Create the physical table (DDL) in the database (e.g., under the bronze schema) with the correct column types.
 - Load data (DML) from the corresponding raw CSV file into the newly created table.
+- Automatically generates dbt-compatible `sources` and model schema `.yml` files based on the discovered tables and columns.
+- For each table, creates an initial staging model `.sql` file (e.g., `stg_<table_name>.sql`) pointing to the corresponding `source()` in dbt.
