@@ -5,14 +5,11 @@ config-version: 2
 
 models:
   sql_dataware_house_project:
-    bronze:
-      +schema: bronze
-      +materialized: table
 
-    silver:
-      +schema: silver
-      +materialized: table
+    staging:
+      +schema: bronze        # camada inicial (raw)
+      +materialized: view
 
-    gold:
-      +schema: gold
+    marts:
+      +schema: silver        # camada analítica/modelada
       +materialized: table

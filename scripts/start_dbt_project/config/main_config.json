@@ -1,0 +1,6 @@
+{
+    "database": "DataWarehouse",
+    "base_path": "datasets",
+    "raw_schema": "bronze",
+    "insert_info": true
+}

@@ -15,7 +15,7 @@ from logging import Logger
 
 import yaml
 
-def create_table(file_path_data_config: str, file_path_datasets: str, logger: Logger, schema: str, add_info: bool = False) -> bool:
+def create_table(file_path_data_config: str, file_path_datasets: str, logger: Logger, schema: str, database: str, add_info: bool = False) -> bool:
     
     logger.info(f"Starting table creation and data loading using config: {file_path_data_config}")
     tables = []
@@ -128,7 +128,7 @@ def create_table(file_path_data_config: str, file_path_datasets: str, logger: Lo
             "sources": [
                 {
                     "name": schema,
-                    "database": "DataWarehouse",
+                    "database": database,
                     "schema": schema,
                     "tables": tables
                 }
@@ -147,6 +147,11 @@ def create_table(file_path_data_config: str, file_path_datasets: str, logger: Lo
             )
 
         logger.info(f"YAML file created: {yml_path}")      
+
+        dbt_models_path =Path(os.path.join("sqlcreator", "models", "marts"))
+        dbt_models_path.mkdir(parents=True, exist_ok=True)
+
+        logger.info(f"Marts file created: {yml_path}") 
 
     except Exception as e:
         logger.error(f"An unexpected error occurred during table processing: {e}", exc_info=True)

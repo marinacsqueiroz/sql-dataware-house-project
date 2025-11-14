@@ -20,6 +20,7 @@
 # Robustness: Each critical step is wrapped in a try...except block to log
 # CRITICAL ERRORS with full traceback (exc_info=True), preventing silent failures.
 # -----------------------------------------------------------------------------
+import json
 import os
 import time
 from create_schema_and_models import create_schema_and_models
@@ -27,19 +28,30 @@ from data_profile import analyse_dataset
 from log import LogManager
 from create_table import create_table
 
-base_path = "datasets"
-raw_schema = "bronze"
+main_config_file_path = os.path.join("scripts", "start_dbt_project", "config", "main_config.json")
 initial_project_file_path = os.path.join("scripts", "start_dbt_project", "config", "schema.json")
 create_table_config_file_path = os.path.join("scripts", "start_dbt_project", "config", "column_type_config.json")
 data_config_file_path = os.path.join("scripts", "start_dbt_project", "config", "column_types.json")
-datasets_file_path = os.path.join(base_path)
+
 
 log_manager = LogManager(subdirectory='start_project')
 logger = log_manager.get_logger()
 
 logger.info("--- STARTING MAIN PROJECT CREATION AND ANALYSIS PROCESS ---")
 bach_start_time = time.time()
+
+try:
+    with open(main_config_file_path, "r", encoding="utf-8") as f:
+        main_config = json.load(f)
+        base_path = main_config['base_path']
+        raw_schema = main_config['raw_schema']
+        insert_info = main_config['insert_info']
+        database = main_config['database']
+except (FileNotFoundError, json.JSONDecodeError) as e:
+    logger.error(f"FATAL: Failed to load or decode custom configuration file {main_config_file_path}: {e}", exc_info=True)
+
 logger.info(f"Starting creation of schemas and models from: {initial_project_file_path}")
+datasets_file_path = os.path.join(base_path)
 try:
     start_time = time.time()
     result_schema_and_models = create_schema_and_models(initial_project_file_path, logger=logger)
@@ -69,7 +81,7 @@ except Exception as e:
 logger.info(f"Starting table creation using config: {data_config_file_path}")
 try:
     start_time = time.time()
-    result_create_table = create_table(data_config_file_path, datasets_file_path, logger=logger, schema=raw_schema, add_info=True)
+    result_create_table = create_table(data_config_file_path, datasets_file_path, logger=logger, schema=raw_schema, database=database, add_info=insert_info)
     end_time = time.time()
     duration = end_time-start_time
     logger.info(f"Table (or DDL/DML model) creation successfully completed in {duration:.4f} seconds.")
