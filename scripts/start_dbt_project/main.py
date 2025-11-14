@@ -28,9 +28,10 @@ from log import LogManager
 from create_table import create_table
 
 base_path = "datasets"
-initial_project_file_path = os.path.join("scripts", "config", "schema.json")
-create_table_config_file_path = os.path.join("scripts", "config", "column_type_config.json")
-data_config_file_path = os.path.join("scripts", "config", "bronze", "column_types.json")
+raw_schema = "bronze"
+initial_project_file_path = os.path.join("scripts", "start_dbt_project", "config", "schema.json")
+create_table_config_file_path = os.path.join("scripts", "start_dbt_project", "config", "column_type_config.json")
+data_config_file_path = os.path.join("scripts", "start_dbt_project", "config", "column_types.json")
 datasets_file_path = os.path.join(base_path)
 
 log_manager = LogManager(subdirectory='start_project')
@@ -39,36 +40,36 @@ logger = log_manager.get_logger()
 logger.info("--- STARTING MAIN PROJECT CREATION AND ANALYSIS PROCESS ---")
 bach_start_time = time.time()
 logger.info(f"Starting creation of schemas and models from: {initial_project_file_path}")
-# try:
-#     start_time = time.time()
-#     result_schema_and_models = create_schema_and_models(initial_project_file_path, logger=logger)
+try:
+    start_time = time.time()
+    result_schema_and_models = create_schema_and_models(initial_project_file_path, logger=logger)
     
-#     if result_schema_and_models:
-#         end_time = time.time()
-#         duration = end_time-start_time
-#         logger.info(f"Schema and model creation successfully completed in {duration:.4f} seconds.")
+    if result_schema_and_models:
+        end_time = time.time()
+        duration = end_time-start_time
+        logger.info(f"Schema and model creation successfully completed in {duration:.4f} seconds.")
     
-#     else:
-#         logger.warning("Schema and model creation completed, but returned a neutral/false status.")
+    else:
+        logger.warning("Schema and model creation completed, but returned a neutral/false status.")
 
-# except Exception as e:
-#     logger.error(f"CRITICAL ERROR during schema and model creation: {e}", exc_info=True)
+except Exception as e:
+    logger.error(f"CRITICAL ERROR during schema and model creation: {e}", exc_info=True)
 
-# logger.info(f"Starting dataset analysis (profiling) in: {base_path}")
-# try:
-#     start_time = time.time()
-#     result_analyse_dataset = analyse_dataset(base_path, create_table_config_file_path, logger=logger, output_path=data_config_file_path)
-#     end_time = time.time()
-#     duration = end_time-start_time
-#     logger.info(f"Dataset analysis completed. Configurations saved to: {data_config_file_path} in {duration:.4f} seconds")
+logger.info(f"Starting dataset analysis (profiling) in: {base_path}")
+try:
+    start_time = time.time()
+    result_analyse_dataset = analyse_dataset(base_path, create_table_config_file_path, logger=logger, output_path=data_config_file_path)
+    end_time = time.time()
+    duration = end_time-start_time
+    logger.info(f"Dataset analysis completed. Configurations saved to: {data_config_file_path} in {duration:.4f} seconds")
     
-# except Exception as e:
-#     logger.error(f"CRITICAL ERROR during dataset analysis and configuration generation: {e}", exc_info=True)
+except Exception as e:
+    logger.error(f"CRITICAL ERROR during dataset analysis and configuration generation: {e}", exc_info=True)
 
 logger.info(f"Starting table creation using config: {data_config_file_path}")
 try:
     start_time = time.time()
-    result_create_table = create_table(data_config_file_path, datasets_file_path, logger=logger)
+    result_create_table = create_table(data_config_file_path, datasets_file_path, logger=logger, schema=raw_schema, add_info=True)
     end_time = time.time()
     duration = end_time-start_time
     logger.info(f"Table (or DDL/DML model) creation successfully completed in {duration:.4f} seconds.")

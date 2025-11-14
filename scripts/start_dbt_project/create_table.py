@@ -15,7 +15,7 @@ from logging import Logger
 
 import yaml
 
-def create_table(file_path_data_config: str, file_path_datasets: str, logger: Logger, add_info: bool = False) -> bool:
+def create_table(file_path_data_config: str, file_path_datasets: str, logger: Logger, schema: str, add_info: bool = False) -> bool:
     
     logger.info(f"Starting table creation and data loading using config: {file_path_data_config}")
     tables = []
@@ -33,7 +33,7 @@ def create_table(file_path_data_config: str, file_path_datasets: str, logger: Lo
             table_name = key
                         
             args_create = {
-                "schema": "bronze",
+                "schema": schema,
                 "table_name": table_name,
                 "columns": item
             }
@@ -58,13 +58,13 @@ def create_table(file_path_data_config: str, file_path_datasets: str, logger: Lo
             logger.info(f"SUCCESS: Table {table_name} created successfully.")
 
             
-            dbt_stg_path = os.path.join("sqlcreator", "models", "staging", "bronze")
+            dbt_stg_path = os.path.join("sqlcreator", "models", "staging", schema)
             sql_file_path = Path(dbt_stg_path) / Path(f"stg_{table_name}.sql")
 
             sql_content = (
                 f"SELECT\n"
                 f"    *\n"
-                f"FROM {{{{ source('bronze', '{table_name}') }}}}\n"
+                f"FROM {{{{ source('{schema}', '{table_name}') }}}}\n"
             )
 
             
@@ -75,7 +75,7 @@ def create_table(file_path_data_config: str, file_path_datasets: str, logger: Lo
 
             table_entry = {
                 "name": table_name,
-                "description": f"Tabela origem bronze.{table_name}",
+                "description": f"Tabela origem {schema}.{table_name}",
                 "columns": []
             }
 
@@ -104,7 +104,7 @@ def create_table(file_path_data_config: str, file_path_datasets: str, logger: Lo
 
                 insert_args = {
                     "file_path": str(csv_path.resolve()),
-                    "table_path": f"bronze.{table_name}"
+                    "table_path": f"{schema}.{table_name}"
                 }
 
                 insert_cmd = [
@@ -127,16 +127,16 @@ def create_table(file_path_data_config: str, file_path_datasets: str, logger: Lo
         sources_yml = {
             "sources": [
                 {
-                    "name": "bronze",
+                    "name": schema,
                     "database": "DataWarehouse",
-                    "schema": "bronze",
+                    "schema": schema,
                     "tables": tables
                 }
             ]
         }
 
 
-        yml_path = Path(dbt_stg_path) / f"_src_bronze.yml"
+        yml_path = Path(dbt_stg_path) / f"_src_{schema}.yml"
 
         with open(yml_path, "w", encoding="utf-8") as f:
             yaml.safe_dump(
