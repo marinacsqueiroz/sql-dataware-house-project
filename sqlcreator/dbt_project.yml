@@ -7,9 +7,9 @@ models:
   sql_dataware_house_project:
 
     staging:
-      +schema: bronze        # camada inicial (raw)
-      +materialized: view
+      +schema: bronze
+      +materialized: table
 
     marts:
-      +schema: silver        # camada analítica/modelada
-      +materialized: table
+      +schema: silver
+      +materialized: view

@@ -2,5 +2,6 @@
     "database": "DataWarehouse",
     "base_path": "datasets",
     "raw_schema": "bronze",
+    "silver_layer": "silver",
     "insert_info": true
 }
