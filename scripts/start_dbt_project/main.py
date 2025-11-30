@@ -45,6 +45,7 @@ try:
         main_config = json.load(f)
         base_path = main_config['base_path']
         raw_schema = main_config['raw_schema']
+        silver_layer = main_config['silver_layer']
         insert_info = main_config['insert_info']
         database = main_config['database']
 except (FileNotFoundError, json.JSONDecodeError) as e:
@@ -81,7 +82,7 @@ except Exception as e:
 logger.info(f"Starting table creation using config: {data_config_file_path}")
 try:
     start_time = time.time()
-    result_create_table = create_table(data_config_file_path, datasets_file_path, logger=logger, schema=raw_schema, database=database, add_info=insert_info)
+    result_create_table = create_table(data_config_file_path, datasets_file_path, logger=logger, schema_base=raw_schema, schema=silver_layer, database=database, add_info=insert_info)
     end_time = time.time()
     duration = end_time-start_time
     logger.info(f"Table (or DDL/DML model) creation successfully completed in {duration:.4f} seconds.")
