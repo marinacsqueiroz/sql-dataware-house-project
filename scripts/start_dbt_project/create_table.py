@@ -62,16 +62,21 @@ def create_table(file_path_data_config: str, file_path_datasets: str, logger: Lo
             sql_file_path = Path(dbt_stg_path) / Path(f"stg_{table_name}.sql")
 
             sql_content = (
+                "{{ config(\n"
+                "    post_hook=[\n"
+                "      \"ALTER TABLE {{ this }} ADD dwh_create_date DATETIME2 DEFAULT GETDATE()\"\n"
+                "    ]\n"
+                ") }}\n\n"
                 f"WITH bronze AS (\n"
                 f"    SELECT\n"
                 f"        *\n"
                 f"    FROM {{{{ source('{schema_base}', '{table_name}') }}}}\n"
                 f")\n"
                 f"SELECT\n"
-                f"    bronze.*,\n"
-                f"    {{{{ dbt.current_timestamp() }}}} AS dbt_create_date\n"
+                f"    *\n"
                 f"FROM bronze\n"
             )
+
 
             
             with open(sql_file_path, "w", encoding="utf-8") as f:
