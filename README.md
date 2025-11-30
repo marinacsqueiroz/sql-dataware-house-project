@@ -104,7 +104,7 @@ Once your connection settings are configured, you can initialize the database st
 From the root of your project directory, execute:
 
 ```bash
-python scripts/start_project/main.py
+python scripts/start_dbt_project/main.py
 ```
 
 🔍 What this script does:
