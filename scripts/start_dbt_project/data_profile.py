@@ -76,10 +76,10 @@ def analyse_dataset(base_path: str, file_path_config: str, logger: Logger, outpu
 
                     dataframes[df_name] = df_dtypes      
 
-                    # profile = ProfileReport(df, title="Profiling Report")
-                    # report_path = (f"./profile_report/analysis_html/{df_name}.html")
-                    # profile.to_file(report_path)
-                    # logger.debug(f"Profiling report generated at: {report_path}")
+                    profile = ProfileReport(df, title="Profiling Report")
+                    report_path = (f"./profile_report/analysis_html/{df_name}.html")
+                    profile.to_file(report_path)
+                    logger.debug(f"Profiling report generated at: {report_path}")
         
         try:
             os.makedirs(os.path.dirname(output_path), exist_ok=True)
